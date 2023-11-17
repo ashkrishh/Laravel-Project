@@ -21,5 +21,6 @@ Route::resource('sessions', SessionController::class)->except(['edit', 'show']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class);
+    Route::get('/get-all-posts',[PostController::class,'getAllPosts'])->name('getAllPosts');
 });
 

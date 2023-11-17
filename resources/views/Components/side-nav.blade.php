@@ -20,20 +20,19 @@
     <div class="navbar navbar-dark my-4 p-0 font-primary">
         <ul class="navbar-nav w-100">
             <li class="nav-item active">
-                <a class="nav-link text-white px-0 pt-0" href="index.html">Posts</a>
+                <a class="nav-link text-white px-0 pt-0" href="/posts">Posts</a>
             </li>
-            <li class="nav-item ">
-                <a class="nav-link text-white px-0" href="/posts/">Users</a>
-            </li>
+            
             <li class="nav-item ">
                 <a class="nav-link text-white px-0" href="/posts/create">Write a post</a>
             </li>
+            
             <li class="nav-item  accordion">
             <a class="nav-link text-white" href="#!" role="button" data-toggle="collapse" data-target="#drop-menu" aria-expanded="false" aria-controls="drop-menu">Profile</a>
                 <div id="drop-menu" class="drop-menu collapse">
                     <form action="{{ url('/sessions/'.auth()->user()->id) }}" method="POST">
                     @csrf {{ csrf_field() }} @method('DELETE')
-                        <x-form.button class='link'>Logout</x-from.button>
+                        <x-form.button class='link'>Logout</x-form.button>
                     </form>
                     <a class="d-block " href="category.html">Change Password</a>
 

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Services\PostService;
+use App\Services\UserService;
 
 class PostController extends Controller
 {
+    protected $userService;
     protected $postService;
 
     /**
@@ -17,8 +20,9 @@ class PostController extends Controller
      * @param  mixed $post
      * @return void
      */
-    public function __construct(PostService $postService)
+    public function __construct(PostService $postService, UserService $userService)
     {
+        $this->userService = $userService;
         $this->postService = $postService;
     }
     /**
@@ -28,8 +32,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = $this->postService->getAllPosts();
-        return view('post.index', compact('posts'));
+        $users = $this->userService->getAllUsers();
+        return view('post.index',compact('users'));
     }
 
     /**
@@ -65,7 +69,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('post.show', [
+            'post' => $post
+        ]);
     }
 
     /**
@@ -99,6 +105,28 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        try {
+            $post->delete();
+            return redirect('/posts')->with('success', 'Your post has been deleted !');
+        } catch (exception $e) {
+            Log::error('Error while deleting post : ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Could not delete the post !');
+        }
+        
+    }
+
+    public function getAllPosts(Request $request)
+    {
+        $draw = $request->get('draw');
+        $totalRecords = $this->postService->getPostsCount();
+        $totalRecordswithFilter = $this->postService->getPostsCountWithFilter($request['filter']);
+        $posts = $this->postService->getAllPosts($request);
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $this->postService->formatPostList($posts)
+        );
+        echo json_encode($response);
     }
 }

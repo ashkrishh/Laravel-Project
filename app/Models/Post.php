@@ -19,4 +19,12 @@ class Post extends Model
         'status'
     ];
 
+    /**
+    * Post - User relationship
+    */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

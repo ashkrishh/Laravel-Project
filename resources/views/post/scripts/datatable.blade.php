@@ -1,5 +1,6 @@
 <script>
 $(document).ready(function () {
+    
     $.fn.serializeObject = function () {
         var obj = {};
         $.each(this.serializeArray(), function (i, o) {
@@ -17,19 +18,21 @@ $(document).ready(function () {
         "searching": false,
         processing: true,
         serverSide: true,
-        order: [[3, 'desc']],
+        order: [[2, 'desc']],
         "pageLength": 25,
         ajax: {
-            url: "/post/get-all-posts",
+            url: "{{route('getAllPosts')}}",
             data: function (result) {
                 result.filter = $('#post-filter-form').serializeObject();
             }
         },
         columns: [
+            { data: 'no' },
             { data: 'title' },
             { data: 'content' },
-            { data: 'published_date' },
+            { data: 'publish_date' },
             { data: 'author' },
+            { data: 'comments' },
             { data: 'actions' },
         ],
     });

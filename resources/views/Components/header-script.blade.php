@@ -14,12 +14,14 @@
     <!-- <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css"> -->
     <link rel="stylesheet" href="{{asset('plugins/bootstrap/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/fontawesome/css/all.css')}}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/dist/remixicon.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'/>
+    
 
     <!-- Main Stylesheet -->
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
     <link href="{{asset('css/custom-style.css')}}" rel="stylesheet">
+ 
 
     <!--Favicon-->
     <link rel="shortcut icon" href="{{asset('images/favicon.png')}}" type="image/x-icon">
@@ -29,10 +31,18 @@
     <script src="{{asset('plugins/jQuery/jquery.min.js')}}"></script>
     <script src="{{asset('plugins/bootstrap/bootstrap.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
     <!-- Main Script -->
     <script src="{{asset('js/script.js')}}"></script>
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">    
+<script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
 
 
 </head>

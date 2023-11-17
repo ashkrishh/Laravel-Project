@@ -32,5 +32,6 @@
             </div>
         </div>
     </div>
-@include('post.scripts.calender');
+
 </x-layout>
+@include('post.scripts.calender');

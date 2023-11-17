@@ -37,7 +37,7 @@ class PostRepository
      */
     public function getAllPosts()
     {
-        return Post::latest();
+        return $this->post->latest();
     }
 
     /**
@@ -48,7 +48,43 @@ class PostRepository
      */
     public function getUserPosts($userIds)
     {
-        return Post::whereIn('user_id', $userIds)->latest();
+        return $this->post->whereIn('user_id', $userIds)->latest();
+    }
+
+        /**
+     * Returns count of all posts
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return $this->post->count();
+    }
+
+     /**
+     * Filters posts based on the search value
+     *
+     * @param  mixed $query
+     * @param  mixed $search
+     * @return void
+     */
+    public function filterBySearch($query, $search)
+    {
+        return $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+    }
+
+     /**
+     * Filters posts based on the field value
+     *
+     * @param  mixed $query
+     * @param  mixed $type
+     * @param  mixed $value
+     * @return void
+     */
+    public function filterPostsByFields($query, $type, $value)
+    {
+        return $query->where($type, '=' , $value);
     }
 
 }
