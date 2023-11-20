@@ -13,7 +13,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,18 @@ class StoreCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'content' => 'required',
+        ];
+    }
+
+     /**
+    * Custom validation messages
+    * @return array
+    */
+    public function messages()
+    {
+        return [
+            'content.required' => 'Please add comment before submitting.',
         ];
     }
 }

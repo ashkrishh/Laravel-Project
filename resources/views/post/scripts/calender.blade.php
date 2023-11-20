@@ -1,4 +1,5 @@
 <script>
+    
 $(document).ready(function() {
     loadCalender();
 });
@@ -7,8 +8,10 @@ function loadCalender() {
         todayBtn: "linked",
         keyboardNavigation: false,
         forceParse: false,
-        format: "dd/mm/yyyy",
+        format: "yyyy-mm-dd",
         autoclose: true
     });
 }
+
+
 </script>

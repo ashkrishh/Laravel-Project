@@ -13,10 +13,10 @@ class UpdateCommentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
+     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -24,7 +24,18 @@ class UpdateCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'content' => 'required',
+        ];
+    }
+
+     /**
+    * Custom validation messages
+    * @return array
+    */
+    public function messages()
+    {
+        return [
+            'content.required' => 'Please add comment before submitting.',
         ];
     }
 }

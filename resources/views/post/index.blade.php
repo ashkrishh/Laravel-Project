@@ -3,12 +3,17 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="ibox">
-                    <div class="ibox-content m-b pull-left">
+                    <div class="ibox-content m-b">
                         <form id="post-filter-form" action="" method="get">
-                        @csrf {{ csrf_field() }}
-                            <x-filters.user-dropdown :users="$users" />
+                        @csrf
+                            <div class="d-flex">
+                                <x-filters.user-dropdown :users="$users" />
+                                <x-filters.calender name="from_date" placeholder="published from" />
+                                <x-filters.calender name="to_date" placeholder="published till"/>
+                            </div>
+                            <x-form.button id="reset">Reset</x-form.button>
                         </form>
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,5 +37,8 @@
             </div>
         </div>
     </div>
-@include('post.scripts.datatable');
+@include('post.comments.modal');
+@include('post.scripts.general');
+@include('post.scripts.calender');
+
 </x-layout>

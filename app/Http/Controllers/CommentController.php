@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -36,7 +37,15 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
+        $request->validated();
+        $request['user_id'] = auth()->user()->id;
+        try {
+            Comment::create($request->only(['user_id', 'post_id', 'content']));
+            return back()->with('success', 'Your comment has been added');
+        } catch (Exception $e) {
+            Log::error('Error while adding comment : ' . $e->getMessage());
+            return back()->with('error', 'Could not add comment.');
+        }
     }
 
     /**

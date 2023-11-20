@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,8 @@ Route::resource('sessions', SessionController::class)->except(['edit', 'show']);
 Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class);
     Route::get('/get-all-posts',[PostController::class,'getAllPosts'])->name('getAllPosts');
+    Route::get('/get-post-comments',[PostController::class,'getPostComments'])->name('getPostComments');
+    Route::resource('comments', CommentController::class);
+   
 });
 

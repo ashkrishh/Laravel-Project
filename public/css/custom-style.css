@@ -7,3 +7,15 @@
   color: #ed1d3d;
 }
 
+.blockquote {
+  padding: 5px 0px;
+}
+
+.widget {
+  margin-top: 5px;
+  margin-bottom: 5px
+}
+
+.show-comments {
+  color: #2620c7;
+}

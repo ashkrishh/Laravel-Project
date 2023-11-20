@@ -39,6 +39,7 @@ class StorePostRequest extends FormRequest
         return [
             'title.required' => 'Please enter a title for the post !',
             'content.required' => 'Please enter content before submitting !',
+            'image.image' => 'Please enter images of the format jpeg,jpg,svg,png,webp !',
         ];
     }
 }

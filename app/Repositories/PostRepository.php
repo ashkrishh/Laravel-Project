@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use App\Models\Comment;
+use Illuminate\Support\Carbon;
 
 class PostRepository
 {
@@ -30,6 +32,19 @@ class PostRepository
         return $this->post->create($data);
     }
 
+     /**
+     * update resource
+     *
+     * @param  mixed $data
+     * @param  mixed $post
+     * @return void
+     */
+    public function update($data, Post $post)
+    {
+        $post->update($data);
+    }
+
+
     /**
      * getAllPosts - get all posts
      *
@@ -51,7 +66,7 @@ class PostRepository
         return $this->post->whereIn('user_id', $userIds)->latest();
     }
 
-        /**
+    /**
      * Returns count of all posts
      *
      * @return int
@@ -59,6 +74,17 @@ class PostRepository
     public function count()
     {
         return $this->post->count();
+    }
+    
+    /**
+     * getComments for a post
+     *
+     * @param  mixed $postId
+     * @return void
+     */
+    public function getComments($postId)
+    {
+        return Comment::where('post_id', $postId)->get();
     }
 
      /**
@@ -85,6 +111,20 @@ class PostRepository
     public function filterPostsByFields($query, $type, $value)
     {
         return $query->where($type, '=' , $value);
+    }
+
+         /**
+     * Filters posts based on the date value
+     *
+     * @param  mixed $query
+     * @param  mixed $type
+     * @param  mixed $value
+     * @return void
+     */
+    public function filterPostsByDate($query, $type, $op, $value)
+    {
+        return $query->whereDate($type, $op , $value);
+
     }
 
 }

@@ -82,7 +82,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('post.edit', [
+            'post' => $post
+        ]);
     }
 
     /**
@@ -94,7 +96,14 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        if (auth()->guest()) {
+            abort(403);
+        }
+        $response = $this->postService->updatePost($request, $post);
+        if ($response) {
+            return redirect()->back()->with('success', 'Your post has been updated');
+        } 
+        return redirect()->back()->with('error', 'Error ! Could not update the post');
     }
 
     /**
@@ -128,5 +137,19 @@ class PostController extends Controller
             "aaData" => $this->postService->formatPostList($posts)
         );
         echo json_encode($response);
+    }
+
+    
+    /**
+     * Fetch all comments of a post
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function getPostComments(Request $request) 
+    {
+        $comments = $this->postService->getAllComments($request->postId);
+        $data = view('post.comments.show', compact('comments'))->render();
+        return response()->json($data);
     }
 }

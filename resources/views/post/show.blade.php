@@ -16,13 +16,19 @@
                 </ul>
 
                 <p>{{ $post->content }}</p>
-
-                <div class="blockquote bg-dark my-5">
-                    <p class="blockquote-text pl-2">A wise girls knows her limit to touch sky.Rpelat sapiesd praesentium adipisci.The question me an idea so asered</p>
-                    <span class="blockquote-footer text-white h4 mt-3">James Hopkins</span>
+            
+                <div class="widget mt-5">
+                    <a class='show-comments'> Show all comments </a><img src="images/arrow-right.png" alt="">
+                    <div style="display: none;" class='comments blockquote bg-dark my-5'>
+                        @include('post.comments.show',['comments' => $post->comments, 'post_id' => $post->id])
+                    </div>
                 </div>
+       
+                @include('post.comments.create')
+                <x-form.anchor class='' href='/posts'> Back </x-form.anchor>
             </div>
         </div>
     </div>
+    @include('post.scripts.general');
 </x-layout>
     

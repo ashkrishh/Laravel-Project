@@ -52,11 +52,10 @@ class PostService
 
         $attributes = $request->except(['_token', '_method']);
         $attributes['user_id'] = auth()->user()->id;
-        $attributes['publish_date'] = Carbon::createFromFormat('d/m/Y',$request->publish_date)->format('Y/m/d');
+        $attributes['publish_date'] = Carbon::createFromFormat('Y-m-d',$request->publish_date)->format('Y/m/d');
         if ($request->file('image')) {
             $attributes['image'] = $this->savePostImage($request);
         }
-
         return $attributes;
     }
 
@@ -68,7 +67,7 @@ class PostService
      */
     public function savePostImage($request)
     {
-        return $request->file('image')->store('posts');
+        return $request->file('image')->store('posts', 'public');
     }
     
     /**
@@ -128,13 +127,15 @@ class PostService
             
             $actions = $this->getActionButtons($post);
             $title = '<a href='."/posts/".$post->id.'>'.$post->title.'</a>';
+            $comments = '<a class="comment-count" data-toggle="modal" data-target="#commentModal" data-id='.$post->id.'>'.count($post->comments).'</a>';
+
             $dataArray[] = array(
               "no" => $key+1,
               "title" => $title,
               "content" => $post->content,
               "publish_date" => $post->publish_date,
               "author" => $post->user->name,
-              "comments" => 5,
+              "comments" => $comments,
               "actions" => $actions,
             );
         }
@@ -149,10 +150,13 @@ class PostService
      */
     public function getActionButtons($post)
     {
-        $url = url('/posts/'.$post->id);
-        
-        $actions = '<button class="btn btn-sm btn-primary mb-1" type="button"> Edit</button>'
-            .'<form id="delete-post" action="'.$url.'" method="POST">'
+        $editUrl = url('/posts/'.$post->id.'/edit');
+        $deleteUrl = url('/posts/'.$post->id);
+
+        $actions = '<form id="edit-post" action="'.$editUrl.'" method="GET">'
+            . '<button class="btn btn-sm btn-primary" type="submit">Edit</button>'
+            . '</form><br>'
+            .'<form id="delete-post" action="'.$deleteUrl.'" method="POST">'
             . csrf_field()
             . '<input type="hidden" name="_method" value="DELETE">' 
             . '<button class="btn btn-sm btn-primary" type="submit">Delete</button>'
@@ -177,7 +181,42 @@ class PostService
         if (isset($filter['user_id'])) {
             $posts = $this->postRepository->filterPostsByFields($posts, 'user_id', $filter['user_id']);
         }
+        if (isset($filter['from_date'])) {
+            $posts = $this->postRepository->filterPostsByDate($posts, 'publish_date', '>=', $filter['from_date']);
+        }
+        if (isset($filter['to_date'])) {
+            $posts = $this->postRepository->filterPostsByDate($posts, 'publish_date', '<=', $filter['to_date']);
+        }
         return $posts;
     }
 
+    /**
+     * Update post data
+     * Store to DB if there are no errors.
+     * @param  mixed $request
+     * @param  mixed $post
+     * @return bool
+     */
+    public function updatePost($request, Post $post)
+    {
+        try {
+            $attributes = $this->getDataForSavePost($request);
+            $this->postRepository->update($attributes, $post);
+            return true;
+        } catch (Exception $e) {
+            Log::error('Error while updating post: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * getAllComments for the post
+     *
+     * @param  mixed $post
+     * @return void
+     */
+    public function getAllComments($postId) 
+    {
+        return $this->postRepository->getComments($postId);
+    }
 }
