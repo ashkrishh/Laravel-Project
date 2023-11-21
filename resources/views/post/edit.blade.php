@@ -22,10 +22,10 @@
                         <x-form.label name="Publish Date"> Publish Date </x-form.label>
                         <x-form.calender name="publish_date"  value="{{ $post->publish_date }}"/> 
                     </div>
-                    <div class="form-group mb-5">
+                    <!-- <div class="form-group mb-5">
                         <x-form.label name="Jira Status"> Need to create a ticket in Jira ? </x-form.label>
                         <x-form.checkbox name="in_jira"  checked="{{ $post->in_jira ? 'checked' : ''}}"/> 
-                    </div>
+                    </div> -->
                     <div class="form-group mb-5">
                         <x-form.label name="Post Status"> Do you want to change the post status ? </x-form.label>
                         <div class = "d-flex"><x-form.label> Active </x-form.label> <x-form.radio name="status" value="active" checked="{{ $post->status  == 'active' ? 'checked' : ''}}"/> </div>

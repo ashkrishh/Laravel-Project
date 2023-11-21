@@ -33,6 +33,7 @@ $(document).ready(function () {
             { data: 'publish_date' },
             { data: 'author' },
             { data: 'comments' },
+            { data: 'status' },
             { data: 'actions' },
         ],
     });
@@ -103,7 +104,7 @@ $(function() {
     });
 
     $('#reset').on('click', function() {
-        $('#post-filter-form input, #post-filter-form select').val('');
+        $('#post-filter-form input, #post-filter-form select, #post-filter-form search').val('');
         $("#post-filter-form").submit();
     });
 

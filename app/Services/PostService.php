@@ -8,9 +8,11 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
+use App\Services\JiraApiService;
 
 class PostService
 {
+    protected $jiraApiService;
     protected $postRepository;
 
     /**
@@ -19,8 +21,9 @@ class PostService
      * @param  mixed $postRepository
      * @return void
      */
-    public function __construct(PostRepository $postRepository)
+    public function __construct(JiraApiService $jiraApiService, PostRepository $postRepository)
     {
+        $this->jiraApiService = $jiraApiService;
         $this->postRepository = $postRepository;
     }
 
@@ -33,7 +36,11 @@ class PostService
     public function savePost($request)
     {
         try {
-            $this->postRepository->save($this->getDataForSavePost($request));
+            $post = $this->postRepository->save($this->getDataForSavePost($request));
+            if($request->in_jira == 1) {
+                $data = $this->jiraApiService->createTicket($request);
+                $this->updatePostWithJiraResponse($data, $post);
+            }
             return true;
         } catch (Exception $e) {
             Log::error('Error while saving post : ' . $e->getMessage());
@@ -68,6 +75,24 @@ class PostService
     public function savePostImage($request)
     {
         return $request->file('image')->store('posts', 'public');
+    }
+    
+    /**
+     * Update post with jira
+     *
+     * @param  mixed $responseData
+     * @param  mixed $post
+     * @return void
+     */
+    public function updatePostWithJiraResponse($responseData, Post $post)
+    {
+        $data = [];
+        if (isset($responseData['key'])) {
+            $data['jira_id'] = $responseData['key'];
+            $this->postRepository->update($data, $post);
+        } else {
+            Log::info("Unable to fetch 'key' from the response.");
+        }
     }
     
     /**
@@ -136,6 +161,7 @@ class PostService
               "publish_date" => $post->publish_date,
               "author" => $post->user->name,
               "comments" => $comments,
+              "status" => $post->status,
               "actions" => $actions,
             );
         }
@@ -181,6 +207,9 @@ class PostService
         if (isset($filter['user_id'])) {
             $posts = $this->postRepository->filterPostsByFields($posts, 'user_id', $filter['user_id']);
         }
+        if (isset($filter['status'])) {
+            $posts = $this->postRepository->filterPostsByFields($posts, 'status', $filter['status']);
+        }
         if (isset($filter['from_date'])) {
             $posts = $this->postRepository->filterPostsByDate($posts, 'publish_date', '>=', $filter['from_date']);
         }
@@ -219,4 +248,5 @@ class PostService
     {
         return $this->postRepository->getComments($postId);
     }
+
 }

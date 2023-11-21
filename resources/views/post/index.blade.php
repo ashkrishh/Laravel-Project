@@ -6,12 +6,17 @@
                     <div class="ibox-content m-b">
                         <form id="post-filter-form" action="" method="get">
                         @csrf
-                            <div class="d-flex">
+                            <div class="row d-flex">
                                 <x-filters.user-dropdown :users="$users" />
                                 <x-filters.calender name="from_date" placeholder="published from" />
                                 <x-filters.calender name="to_date" placeholder="published till"/>
+                                <x-filters.status-dropdown />
+                                
                             </div>
-                            <x-form.button id="reset">Reset</x-form.button>
+                            <div class="row d-flex">
+                                <x-filters.search />
+                                <x-form.button id="reset">Reset</x-form.button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -29,6 +34,7 @@
                             <th class="h3" scope="col">Published On</th>
                             <th class="h3" scope="col">Author</th>
                             <th class="h3" scope="col">Comments</th>
+                            <th class="h3" scope="col">Status</th>
                             <th class="h3" scope="col">Actions</th>
                         </tr>
                     </thead>

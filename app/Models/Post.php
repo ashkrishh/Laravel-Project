@@ -16,6 +16,7 @@ class Post extends Model
         'publish_date',
         'image',
         'in_jira',
+        'jira_id',
         'status'
     ];
 
@@ -34,6 +35,17 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    
+    /**
+     * scopeInJira
+     *
+     * @param  mixed $query
+     * @return void
+     */
+    public function scopeInJira($query)
+    {
+        return $query->where('in_jira', 1);
     }
 
 }
