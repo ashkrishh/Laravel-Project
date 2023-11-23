@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon;
 use App\Services\JiraApiService;
+use App\Jobs\CreateJiraTicket;
 
 class PostService
 {
@@ -38,8 +39,12 @@ class PostService
         try {
             $post = $this->postRepository->save($this->getDataForSavePost($request));
             if($request->in_jira == 1) {
-                $data = $this->jiraApiService->createTicket($request);
-                $this->updatePostWithJiraResponse($data, $post);
+                //dispatch(new CreateJiraTicket($request->input()));
+
+                CreateJiraTicket::dispatch($post, $request->input());
+
+                // $data = $this->jiraApiService->createTicket($request);
+                // $this->updatePostWithJiraResponse($data, $post);
             }
             return true;
         } catch (Exception $e) {
@@ -247,6 +252,15 @@ class PostService
     public function getAllComments($postId) 
     {
         return $this->postRepository->getComments($postId);
+    }
+
+    public function delete(Post $post) 
+    {
+        if($post->in_jira == 1) {
+            $data = $this->jiraApiService->updateTransition($post, 'resolved');
+        }
+        $post->delete();
+        return true;
     }
 
 }

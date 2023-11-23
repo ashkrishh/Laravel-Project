@@ -25,7 +25,7 @@ class JiraApiService
         $fields = [
             'fields' => [
                 'project' => ['key' => $this->projectKey],
-                'summary' => $data->title,
+                'summary' => $data['title'],
                 'description' => [
                     'type' =>  'doc',
                     'version' => 1,
@@ -35,17 +35,18 @@ class JiraApiService
                         'content' => [
                         [
                             'type' => 'text',
-                            'text' => $data->content
+                            'text' => $data['content']
                         ]
                         ]
                     ]
                     ]
                     ],
-                'issuetype' => ['id' => '10001'],
-                'priority' => ['id' => '3'],
+                'issuetype' => ['id' => config('api.jira.issue_type.task')],
+                'priority' => ['id' => config('api.jira.priority.medium')],
             ]
         ];
-        $responseData = $this->setApiData(config('api.jira.endpoint.create_issue'), $fields);
+        
+        $responseData = $this->postApiData(config('api.jira.endpoint.create_issue'), $fields);
         return $responseData;
     }
 
@@ -69,14 +70,45 @@ class JiraApiService
             ]
         ];
         
-        $responseData = $this->setApiData(str_replace('{issueKey}', $data->issueKey, config('api.jira.endpoint.add_comment')), $fields);
+        $responseData = $this->postApiData(str_replace('{issueKey}', $data->jira_id, config('api.jira.endpoint.add_comment')), $fields);
         return $responseData;
     }
 
-    public function setApiData($endpoint, $fields = [])
+    public function updateTransition($data, $value)
+    {
+        $fields = [
+            'transition' =>  [
+                'id' =>  config('api.jira.transition.'.$value),
+            ]    
+        ];
+        $responseData = $this->postApiData(str_replace('{issueKey}', $data->jira_id, config('api.jira.endpoint.update_transition')), $fields);
+        return $responseData;
+    }
+
+
+    public function postApiData($endpoint, $fields = [])
     {
         try {
             $response = $this->client->post($this->baseUrl . $endpoint, [
+                'auth' => [$this->apiUsername, $this->apiToken],
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'json' =>  $fields,
+               
+            ]);
+            return json_decode($response->getBody(), true);
+        } catch (RequestException $e) {
+            Log::info("API error => " . $e->getResponse()->getBody()->getContents());
+            throw $e;
+        }
+    }
+
+    public function putApiData($endpoint, $fields = [])
+    {
+        try {
+            $response = $this->client->put($this->baseUrl . $endpoint, [
                 'auth' => [$this->apiUsername, $this->apiToken],
                 'headers' => [
                     'Content-Type' => 'application/json',

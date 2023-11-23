@@ -78,7 +78,7 @@ class CommentController extends Controller
     {
         $post = $this->post->where('id', $data->post_id)->first();
         if($post->in_jira == 1) {
-            $data->issueKey = $post->jira_id;
+            $data->jira_id = $post->jira_id;
             $this->jiraApiService->addComment($data);
         }
     }

@@ -115,7 +115,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         try {
-            $post->delete();
+            $this->postService->delete($post);
             return redirect('/posts')->with('success', 'Your post has been deleted !');
         } catch (exception $e) {
             Log::error('Error while deleting post : ' . $e->getMessage());
