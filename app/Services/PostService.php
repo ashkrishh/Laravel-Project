@@ -82,23 +82,6 @@ class PostService
         return $request->file('image')->store('posts', 'public');
     }
     
-    /**
-     * Update post with jira
-     *
-     * @param  mixed $responseData
-     * @param  mixed $post
-     * @return void
-     */
-    public function updatePostWithJiraResponse($responseData, Post $post)
-    {
-        $data = [];
-        if (isset($responseData['key'])) {
-            $data['jira_id'] = $responseData['key'];
-            $this->postRepository->update($data, $post);
-        } else {
-            Log::info("Unable to fetch 'key' from the response.");
-        }
-    }
     
     /**
      * Get total count of posts
